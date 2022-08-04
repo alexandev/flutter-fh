@@ -7,6 +7,17 @@ class InputsScreen extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+
+    final GlobalKey<FormState> myFormKey = GlobalKey<FormState>();
+
+    final Map<String, String> formValues = {
+      'first_name': 'Alexander',
+      'last_name' : 'Moreno',
+      'email'     : 'correo@prueba',
+      'password'  : '123456',
+      'role'      : 'Admin'      
+    };
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Inputs y Forms"),
@@ -14,10 +25,41 @@ class InputsScreen extends StatelessWidget {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric( horizontal: 20, vertical: 10),
-          child: Column(
-            children: const [
-              CustomInputField( labelText: 'Nombre', hintText: 'Nombre del usuario',)
-            ],
+          child: Form(
+            key: myFormKey,
+            child: Column(
+              children: [
+                CustomInputField( labelText: 'Nombre', hintText: 'Nombre del usuario', formProperty: 'first_name', formValues: formValues,),
+                const SizedBox( height:30 ),
+          
+                CustomInputField( labelText: 'Apellido', hintText: 'Apellido del usuario', formProperty: 'last_name', formValues: formValues,),
+                const SizedBox( height:30 ),
+          
+                CustomInputField( labelText: 'Correo', hintText: 'Correo del usuario', formProperty: 'email', formValues: formValues, keyboardType: TextInputType.emailAddress,),
+                const SizedBox( height:30 ),
+          
+                CustomInputField( labelText: 'Contrasena', hintText: 'Contrasena del usuario', formProperty: 'password', formValues: formValues, obscureText: true,),
+                const SizedBox( height:30 ),
+          
+                ElevatedButton(
+                  child: const SizedBox(
+                    width: double.infinity,
+                    height: 48,
+                    child: Center(child: Text('Enviar'))
+                  ),
+                  onPressed: (){
+                    //quitar el teclado
+                    FocusScope.of(context).requestFocus( FocusNode() );
+
+                    if( !myFormKey.currentState!.validate() ){
+                      print('Formulario no valido');
+                      return;
+                    }
+                    print(formValues);
+                  }, 
+                )
+              ],
+            ),
           ),
         ),
       )
