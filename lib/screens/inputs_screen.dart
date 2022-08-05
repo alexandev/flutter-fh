@@ -40,6 +40,21 @@ class InputsScreen extends StatelessWidget {
           
                 CustomInputField( labelText: 'Contrasena', hintText: 'Contrasena del usuario', formProperty: 'password', formValues: formValues, obscureText: true,),
                 const SizedBox( height:30 ),
+
+                DropdownButtonFormField<String>(
+                  items: const [
+                    DropdownMenuItem(value: 'Admin', child: Text('Admin')),
+                    DropdownMenuItem(value: 'Superuser', child: Text('Superuser')),
+                    DropdownMenuItem(value: 'Developer', child: Text('Developer')),
+                    DropdownMenuItem(value: 'Jr. Developer', child: Text('Jr. Developer')),
+
+                  ], 
+                  onChanged: (String? value) { 
+                    print(value);
+                    formValues['role'] = value ?? 'Admin';
+                   },
+                ),
+                const SizedBox( height:30 ),
           
                 ElevatedButton(
                   child: const SizedBox(
