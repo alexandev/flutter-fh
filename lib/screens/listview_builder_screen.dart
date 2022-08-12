@@ -55,7 +55,7 @@ class _ListviewBuilderScreenState extends State<ListviewBuilderScreen> {
     setState((){});
 
     if( scrollController.position.pixels + 100 <= scrollController.position.maxScrollExtent) return;
-    
+
     scrollController.animateTo(
       scrollController.position.pixels + 120, 
       duration: const Duration( milliseconds: 300 ),
@@ -63,6 +63,13 @@ class _ListviewBuilderScreenState extends State<ListviewBuilderScreen> {
       );
   }
 
+  Future<void> onRefresh() async{
+    await Future.delayed( const Duration( seconds: 2));
+    final lastId = imagesIds.last;
+    imagesIds.clear();
+    imagesIds.add(lastId + 1);
+    add5();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,21 +82,25 @@ class _ListviewBuilderScreenState extends State<ListviewBuilderScreen> {
         removeTop: true,
         removeBottom: true,
         child: Stack(
-
           children: [
-            ListView.builder(
-              // cualquier widget que tenga scroll tiene el controller
-              controller: scrollController,
-              itemCount: imagesIds.length,
-              itemBuilder: (BuildContext context, int index) {
-                return FadeInImage(
-                  width: double.infinity,
-                  height: 300,
-                  fit: BoxFit.cover,
-                  placeholder: const AssetImage('assets/jar-loading.gif'), 
-                  image: NetworkImage('https://picsum.photos/500/300?random=${imagesIds[index]}')
-                );
-              },
+
+            RefreshIndicator(
+              color: AppTheme.primary,
+              onRefresh: onRefresh,
+              child: ListView.builder(
+                // cualquier widget que tenga scroll tiene el controller
+                controller: scrollController,
+                itemCount: imagesIds.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return FadeInImage(
+                    width: double.infinity,
+                    height: 300,
+                    fit: BoxFit.cover,
+                    placeholder: const AssetImage('assets/jar-loading.gif'), 
+                    image: NetworkImage('https://picsum.photos/500/300?random=${imagesIds[index]}')
+                  );
+                },
+              ),
             ),
 
             if(isLoading)
